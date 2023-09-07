@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  zipcodesserver:
+    image: ${DOCKER_REGISTRY-}zipcodesserver
+    build:
+      context: .
+      dockerfile: ZipCodesServer/Dockerfile
+  catalogdb:
+    image: mongo
+
