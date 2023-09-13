@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using System.Reflection.PortableExecutable;
 using ZipCodesServer.Data;
 using ZipCodesServer.Repos;
 using ZipCodesServer.Services;
@@ -14,7 +15,15 @@ namespace ZipCodesServer
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    policy =>
+                    {
+                        policy.WithOrigins("*")
+                            .AllowAnyHeader();
+                    });
+            });
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -40,6 +49,7 @@ namespace ZipCodesServer
                 httpClient.BaseAddress = new Uri("https://api.zippopotam.us");
 
             });
+     
 
             builder.Services.Configure<CatalogDatabaseSettings>(builder.Configuration.GetSection(nameof(CatalogDatabaseSettings)));
 
@@ -59,11 +69,11 @@ namespace ZipCodesServer
                 app.UseSwaggerUI();
             }
 
+            app.UseCors();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
-
+           
             app.MapControllers();
 
             app.Run();

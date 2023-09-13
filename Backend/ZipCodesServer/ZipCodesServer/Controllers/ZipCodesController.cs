@@ -24,7 +24,7 @@ namespace ZipCodesServer.Controllers
             _repository = zipCodeRepository;
         }
 
-        [HttpGet("getCity/{country}/{code}", Name = "GetZipCodeByCountryAndCode")]
+        [HttpGet("getByCode/{country}/{code}", Name = "GetZipCodeByCountryAndCode")]
         public async Task<ActionResult> GetZipCode(string country, string code)
         {
             ZipCode zipcode = null;// memoryCache.Get<ZipCode>($"country:{country}/code:{code}");
@@ -88,7 +88,7 @@ namespace ZipCodesServer.Controllers
 
         }
 
-        [HttpGet("getCode/{country}/{city}", Name = "GetZipCodeByCountryAndCity")]
+        [HttpGet("getByCity/{country}/{city}", Name = "GetZipCodeByCountryAndCity")]
         public async Task<ActionResult> GetZipCodeByCity(string country, string city)
         {
             var zipcode = memoryCache.Get<ZipCode>($"{country}/{city}");
@@ -120,6 +120,7 @@ namespace ZipCodesServer.Controllers
                     {
                         var zip = new ZipCode();
                         zip.PostCode = zipc.PostCode;
+                        zip.Places = zipc.Places;
                         return zip;
                     }));
 
@@ -139,6 +140,73 @@ namespace ZipCodesServer.Controllers
         }
 
 
+
+        [HttpGet("getTopCodes/{country}", Name = "GetZipCodesByCountry")]
+        public async Task<ActionResult> GetZipCodeByCountry(string country)
+        {  
+
+                IEnumerable<ZipCodeHistory> z = null;
+                try
+                {
+                    z = await _repository.GetZipCodesByCountry(country);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.Message);
+                }
+
+                if (z.Any())
+                {
+                    return Ok(z.Select(zipc =>
+                    {
+                        var zip = new ZipCode();
+                        zip.PostCode = zipc.PostCode;
+                        return zip;
+                    }));
+
+                }
+                else
+                {
+                    return NotFound();
+
+                }
+
+
+        }
+
+
+        [HttpGet("getTopCodes", Name = "GetTopZipCodes")]
+        public async Task<ActionResult> GetTopZipCodes(int top)
+        {
+
+            IEnumerable<ZipCodeHistory> z = null;
+            try
+            {
+                z = await _repository.GetZipCodes();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+
+            if (z.Any())
+            {
+                var topResults= z.Take(5);
+                return Ok(z.Select(zipc =>
+                {
+                    return new { code = zipc.PostCode , country = zipc.Country, searches = zipc.SearchedTimes };
+  
+                }));
+
+            }
+            else
+            {
+                return NotFound();
+
+            }
+
+
+        }
 
 
 

@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using System.Reflection.Emit;
 using ZipCodesServer.Data;
 using ZipCodesServer.Models;
 
@@ -13,15 +14,29 @@ namespace ZipCodesServer.Repos
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<IEnumerable<ZipCodeHistory>> GetProducts()
+        public async Task<List<ZipCodeHistory>> GetZipCodes()
         {
-            return await _context
-                            .ZipCodeHistoric
-                            .Find(p => true)
-                            .ToListAsync();
+            var zipCodes = await _context
+                             .ZipCodeHistoric.Find(x => true)
+                             .ToListAsync();
+
+            return zipCodes.OrderByDescending(p => p.SearchedTimes).ToList();
         }
 
-        public async Task<ZipCodeHistory> GetProduct(string id)
+
+        public async Task<List<ZipCodeHistory>> GetZipCodes(string country)
+        {
+            FilterDefinition<ZipCodeHistory> filter = Builders<ZipCodeHistory>.Filter.Eq(p => p.CountryAbbreviation, country.ToUpperInvariant());
+
+            var zipCodes = await _context
+                      .ZipCodeHistoric
+                      .Find(filter)
+                      .ToListAsync();
+            
+            return zipCodes.OrderByDescending(p => p.SearchedTimes).ToList();
+        }
+
+        public async Task<ZipCodeHistory> GetZipCode(string id)
         {
             return await _context
                            .ZipCodeHistoric
@@ -29,28 +44,37 @@ namespace ZipCodesServer.Repos
                            .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<ZipCodeHistory>> GetZipCodesByCountryAndCity(string country, string city)
+        public async Task<List<ZipCodeHistory>> GetZipCodesByCountryAndCity(string country, string city)
         {
-            FilterDefinition<ZipCodeHistory> filter = Builders<ZipCodeHistory>.Filter.Eq(p => p.CountryAbbreviation, country.ToUpperInvariant() );
+            FilterDefinition<ZipCodeHistory> filter = Builders<ZipCodeHistory>.Filter.Eq(p => p.CountryAbbreviation, country.ToUpperInvariant());
 
             var filtyeredByCode = await _context
                       .ZipCodeHistoric
                       .Find(filter)
                       .ToListAsync();
-            return filtyeredByCode.Where(x => x.Places.Any(c => c.Name.Equals(city, StringComparison.InvariantCultureIgnoreCase ))).ToList();
+            return filtyeredByCode.Where(x => x.Places.Any(c => c.Name.Equals(city, StringComparison.InvariantCultureIgnoreCase))).ToList();
         }
 
-        public async Task<IEnumerable<ZipCodeHistory>> GetZipCodesByCountryAndCode(string country, string code)
+        public async Task<List<ZipCodeHistory>> GetZipCodesByCountryAndCode(string country, string code)
         {
             FilterDefinition<ZipCodeHistory> codeFilter = Builders<ZipCodeHistory>.Filter.Eq(p => p.PostCode, code);
 
-          var filtyeredByCode =  await _context
-                            .ZipCodeHistoric
-                            .Find(codeFilter)
-                            .ToListAsync();
+            var filtyeredByCode = await _context
+                              .ZipCodeHistoric
+                              .Find(codeFilter)
+                              .ToListAsync();
             return filtyeredByCode.Where(x => x.CountryAbbreviation.Equals(country, StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
 
+        public async Task<List<ZipCodeHistory>> GetZipCodesByCountry(string country)
+        {
+            FilterDefinition<ZipCodeHistory> codeFilter = Builders<ZipCodeHistory>.Filter.Eq(p => p.CountryAbbreviation, country.ToUpperInvariant());
+
+            return await _context
+                               .ZipCodeHistoric
+                               .Find(codeFilter)
+                               .ToListAsync();
+        }
 
         public async Task Create(ZipCodeHistory product)
         {

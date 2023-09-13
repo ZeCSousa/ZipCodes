@@ -4,13 +4,15 @@ namespace ZipCodesServer.Repos
 {
     public interface IZipCodeRepository
     {
-        Task<IEnumerable<ZipCodeHistory>> GetProducts();
-        Task<ZipCodeHistory> GetProduct(string id);
-        Task<IEnumerable<ZipCodeHistory>> GetZipCodesByCountryAndCity(string country, string city);
-        Task<IEnumerable<ZipCodeHistory>> GetZipCodesByCountryAndCode(string country,string code);
+        Task<List<ZipCodeHistory>> GetZipCodes(string country);
+        Task<List<ZipCodeHistory>> GetZipCodes();
+        Task<ZipCodeHistory> GetZipCode(string id);
+        Task<List<ZipCodeHistory>> GetZipCodesByCountryAndCity(string country, string city);
+        Task<List<ZipCodeHistory>> GetZipCodesByCountry(string country);
+        Task<List<ZipCodeHistory>> GetZipCodesByCountryAndCode(string country,string code);
 
-        Task Create(ZipCodeHistory product);
-        Task<bool> Update(ZipCodeHistory product);
+        Task Create(ZipCodeHistory zipCode);
+        Task<bool> Update(ZipCodeHistory zipCode);
         Task<bool> Delete(string id);
     }
 }
