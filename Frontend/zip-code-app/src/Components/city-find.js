@@ -5,7 +5,7 @@ import { CityCards } from "./CityCards";
 
 const CityFind = () => {
 
-	const apiEndpoint = "https://localhost:64544/api/v1/ZipCodes/getByCity";
+	const apiEndpoint = "https://localhost:443/api/v1/ZipCodes/getByCity";
 
 
 	const [city, setCity] = useState("");
@@ -61,6 +61,7 @@ const CityFind = () => {
 	  return (
 		<div className="search-page">
 		  <h3>Search City</h3>
+		  <div className="search-form">
 		  <label htmlFor="country">Country:</label>
 			<input
 			  type="text"
@@ -69,7 +70,7 @@ const CityFind = () => {
 			  value={country}
 			  onChange={handleCountryChange}
 			/>
-		  <div className="search-form">
+	
 			<label htmlFor="city">City Name:</label>
 			<input
 			  type="text"
@@ -77,9 +78,12 @@ const CityFind = () => {
 			  name="city"
 			  value={city}
 			  onChange={handleCityChange}
-			/>			
+			/>	
+			
 			<button onClick={handleSearchClick}>Search</button>
 			<button onClick={handleClearClick}>Clear</button>
+			
+	
 		  </div>
 		  <div className="search-result">
 			{(result.length > 0) ? ( // if result is not null, show it in a paragraph

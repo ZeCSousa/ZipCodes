@@ -6,7 +6,7 @@ import { CodeCard } from "./CodeCard";
 
 const ZipCodeFind = () => {
 
-	const apiEndpoint = "https://localhost:64544/api/v1/ZipCodes/getByCode";
+	const apiEndpoint = "https://localhost:443/api/v1/ZipCodes/getByCode";
 
 
 	const [code, setCode] = useState("");
@@ -60,7 +60,8 @@ const ZipCodeFind = () => {
 
 	  return (
 		<div className="search-page">
-		  <h3>Search by Code</h3>
+		  <h3>Search by Code</h3> 
+		   <div className="search-form">
 		  <label htmlFor="country">Country:</label>
 			<input
 			  type="text"
@@ -69,7 +70,7 @@ const ZipCodeFind = () => {
 			  value={country}
 			  onChange={handleCountryChange}
 			/>
-		  <div className="search-form">
+		
 			<label htmlFor="code">Zip Code:</label>
 			<input
 			  type="text"

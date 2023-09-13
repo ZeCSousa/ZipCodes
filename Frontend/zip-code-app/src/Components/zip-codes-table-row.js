@@ -4,12 +4,12 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 const ZipCodesRow = (props) => {
-	const { code, places, searches } = props.obj;
+	const { code, country, searches } = props.obj;
 
 	return (
 		<tr>
 			<td>{code}</td>
-			<td>{places}</td>
+			<td>{country}</td>
 			<td>{searches}</td>
 		</tr>
 	);

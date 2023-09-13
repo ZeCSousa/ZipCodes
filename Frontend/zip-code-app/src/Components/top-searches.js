@@ -4,21 +4,29 @@ import { Table } from "react-bootstrap";
 import ZipCodesRow from "./zip-codes-table-row";
 
 const TopSearches = () => {
-const [Agents, setAgents] = useState([]);
+
+const apiEndpoint = "https://localhost:443/api/v1/ZipCodes/GetTopCodes";
+
+
+
+const [city, setCity] = useState("");
+const [country, setCountry] = useState("");
+const [result, setResult] = useState([]);
+const [count, setCount] = useState(10);
 
 useEffect(() => {
-	axios
-	.get("http://localhost:8080/agents/")
-	.then(({ data }) => {
-		setAgents(data);
-	})
-	.catch((error) => {
-		console.log(error);
-	});
+	fetch(`${apiEndpoint}?top=${count}`)
+		.then((response) => response.json()) // parse the response as JSON
+		.then((data) => {
+		  setResult(data); // set the result state
+		})
+		.catch((error) => {
+		  console.error(error); // handle any errors
+		});
 }, []);
 
 const DataTable = () => {
-	return Agents.map((res, i) => {
+	return result.map((res, i) => {
 	return <ZipCodesRow obj={res} key={i} />;
 	});
 };
@@ -29,8 +37,8 @@ return (
 		<thead>
 		<tr>
 			<th>Code</th>
-			<th>City</th>
 			<th>Country</th>
+			<th>Search Count</th>
 		</tr>
 		</thead>
 		<tbody>{DataTable()}</tbody>
