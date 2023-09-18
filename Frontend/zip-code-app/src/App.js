@@ -12,7 +12,7 @@ import "./App.css";
 // Import from react-router-dom
 import {
   BrowserRouter as Router, Routes,
-  Route, Link, useParams,
+  Route, Link
 } from "react-router-dom";
 
 // Import other React Component

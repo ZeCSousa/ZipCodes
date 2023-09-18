@@ -2,10 +2,10 @@
 FROM node:16-alpine
 
 # set working directory
-WORKDIR /agent-manager
+WORKDIR /zip-code-app
 
 # add `/app/node_modules/.bin` to $PATH
-ENV PATH /agent-manager/node_modules/.bin:$PATH
+ENV PATH /zip-code-app/node_modules/.bin:$PATH
 
 # install app dependencies
 COPY package.json ./

@@ -13,7 +13,6 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
     depends_on:
       - catalogdb
-
   catalogdb:
     container_name: catalogdb
     restart: always

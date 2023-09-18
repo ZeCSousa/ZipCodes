@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Table } from "react-bootstrap";
 import ZipCodesRow from "./zip-codes-table-row";
 
@@ -8,9 +7,6 @@ const TopSearches = () => {
 const apiEndpoint = "https://localhost:443/api/v1/ZipCodes/GetTopCodes";
 
 
-
-const [city, setCity] = useState("");
-const [country, setCountry] = useState("");
 const [result, setResult] = useState([]);
 const [count, setCount] = useState(10);
 
