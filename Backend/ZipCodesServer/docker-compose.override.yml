@@ -17,7 +17,7 @@ services:
     container_name: catalogdb
     restart: always
     volumes:
-      - ${WEBAPP_STORAGE_HOME}/site:/data/db
+      - ./site:/data/db
     ports:
       - "27017:27017"
 

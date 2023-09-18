@@ -21,14 +21,15 @@ useEffect(() => {
 		});
 }, []);
 
-const DataTable = () => {
-	return result.map((res, i) => {
+const DataTable = () => 	
+	 result.map((res, i) => {
 	return <ZipCodesRow obj={res} key={i} />;
 	});
-};
+
 
 return (
 	<div className="table-wrapper">
+		 {result.length ?
 	<Table striped bordered hover>
 		<thead>
 		<tr>
@@ -39,6 +40,9 @@ return (
 		</thead>
 		<tbody>{DataTable()}</tbody>
 	</Table>
+	: "No Content yet."
+	} 
+	
 	</div>
 );
 };
