@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace ZipCodesServer.Models
 {
-    public class ZipCode
+    public record ZipCode
     {
  
         [JsonPropertyName("post code")]

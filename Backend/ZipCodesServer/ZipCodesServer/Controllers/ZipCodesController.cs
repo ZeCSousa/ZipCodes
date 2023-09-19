@@ -10,12 +10,12 @@ namespace ZipCodesServer.Controllers
     [Route("api/v1/[controller]")]
     public class ZipCodesController : ControllerBase
     {
-        private ZipCodeService _zipCodeService;
+        private IZipCodeService _zipCodeService;
         private readonly IMemoryCache memoryCache;
         private readonly ILogger<ZipCodesController> _logger;
         private readonly IZipCodeRepository _repository;
 
-        public ZipCodesController(ZipCodeService zipCodeService, IMemoryCache memoryCache,
+        public ZipCodesController(IZipCodeService zipCodeService, IMemoryCache memoryCache,
             ILogger<ZipCodesController> logger, IZipCodeRepository zipCodeRepository)
         {
             _zipCodeService = zipCodeService;
@@ -44,7 +44,7 @@ namespace ZipCodesServer.Controllers
 
                 if (zipcode != null)
                 {
-                    memoryCache.Set<ZipCode>($"country:{country}/code:{code}", zipcode, TimeSpan.FromHours(24));
+                    memoryCache?.Set<ZipCode>($"country:{country}/code:{code}", zipcode, TimeSpan.FromHours(24));
                     IEnumerable<ZipCodeHistory> z = null;
                     try
                     {
@@ -55,7 +55,7 @@ namespace ZipCodesServer.Controllers
                         _logger.LogError(ex.Message);
                     }
 
-                    if (z.Count() > 0)
+                    if ( z?.Count() > 0)
                     {
                         var zip = z.First();
                         zip.SearchedTimes++;
@@ -106,7 +106,7 @@ namespace ZipCodesServer.Controllers
                     _logger.LogError(ex.Message);
                 }
 
-                if (z.Any())
+                if (z?.Count() > 0)
                 {
                     z.ToList().ForEach(async e =>
                     {
@@ -155,7 +155,7 @@ namespace ZipCodesServer.Controllers
                     _logger.LogError(ex.Message);
                 }
 
-                if (z.Any())
+                if (z is not null && z.Any())
                 {
                     return Ok(z.Select(zipc =>
                     {

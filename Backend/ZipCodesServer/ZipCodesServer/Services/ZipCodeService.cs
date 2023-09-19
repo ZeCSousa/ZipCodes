@@ -4,7 +4,7 @@ using ZipCodesServer.Models;
 
 namespace ZipCodesServer.Services
 {
-    public class ZipCodeService
+    public class ZipCodeService : IZipCodeService
     {
 
         readonly HttpClient _httpClient;

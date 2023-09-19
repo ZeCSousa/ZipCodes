@@ -43,7 +43,8 @@ namespace ZipCodesServer
                 });
             });
             builder.Services.AddMemoryCache();
-            builder.Services.AddHttpClient<ZipCodeService>((provider, httpClient) =>
+
+            builder.Services.AddHttpClient<IZipCodeService, ZipCodeService>((provider, httpClient) =>
             {
 
                 httpClient.BaseAddress = new Uri("https://api.zippopotam.us");
