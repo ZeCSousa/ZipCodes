@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { CityCards } from "./CityCards";
+import { fetchWithTimeout } from "../utils";
 
 
 const CityFind = () => {
@@ -11,6 +12,7 @@ const CityFind = () => {
 	const [city, setCity] = useState("");
 	const [country, setCountry] = useState("");
 	const [result, setResult] = useState([]);
+	const [error, setError] = useState(false);
   
 	// handle the change events of the inputs
 	const handleCityChange = (event) => {
@@ -25,13 +27,15 @@ const CityFind = () => {
 	const handleSearchClick = () => {
 	  // use the props.api as the external API endpoint
 	  // use the city and country as the query parameters
-	  fetch(`${apiEndpoint}/${country}/${city}`)
+	  fetchWithTimeout(`${apiEndpoint}/${country}/${city}`, { method: "GET" }, 5000)
 		.then((response) => response.json()) // parse the response as JSON
 		.then((data) => {
 		  setResult(data); // set the result state
+		  setError(false);
 		})
 		.catch((error) => {
 		  console.error(error); // handle any errors
+		 setError(true);
 		});
 	};
   
@@ -40,6 +44,7 @@ const CityFind = () => {
 	  setCity("");
 	  setCountry("");
 	  setResult(null);
+	  setError(false);
 	};
 
 
@@ -85,6 +90,7 @@ const CityFind = () => {
 			
 	
 		  </div>
+		 {error && <p>Error fetching results.</p>}
 		  <div className="search-result">
 			{(result.length > 0) ? ( // if result is not null, show it in a paragraph
 			 cardsWithHeader(result)

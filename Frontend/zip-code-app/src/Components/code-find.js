@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 
 import { CodeCard } from "./CodeCard";
+import { fetchWithTimeout } from "../utils";
 
 
 const ZipCodeFind = () => {
@@ -12,6 +13,7 @@ const ZipCodeFind = () => {
 	const [code, setCode] = useState("");
 	const [country, setCountry] = useState("");
 	const [result, setResult] = useState(null);
+	const [error, setError] = useState(false);
   
 	// handle the change events of the inputs
 	const handleCityChange = (event) => {
@@ -26,14 +28,16 @@ const ZipCodeFind = () => {
 	const handleSearchClick = () => {
 	  // use the props.api as the external API endpoint
 	  // use the city and country as the query parameters
-	  fetch(`${apiEndpoint}/${country}/${code}`)
+	  fetchWithTimeout(`${apiEndpoint}/${country}/${code}`, { method: "GET" }, 5000)
 		.then((response) => response.json()) // parse the response as JSON
 		.then((data) => {
 		  setResult(data); // set the result state
+		  setError(false);
 		})
 		.catch((error) => {
 		  console.error(error); // handle any errors
 		  setResult(null);
+		  setError(true)
 		});
 	};
   
@@ -82,6 +86,7 @@ const ZipCodeFind = () => {
 			<button onClick={handleSearchClick}>Search</button>
 			<button onClick={handleClearClick}>Clear</button>
 		  </div>
+		  {error && <p>Error fetching results.</p>}
 		  <div className="search-result">
 			{result ? ( // if result is not null, show it in a paragraph
 			 cardsWithHeader(result)
